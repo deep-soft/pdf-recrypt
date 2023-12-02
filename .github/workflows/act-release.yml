@@ -60,9 +60,13 @@ jobs:
       - name: get program version
         shell: bash
         run: |
-          VERSION=$(grep "project(" "CMakeLists.txt" | awk -F' ' '{print $3}' | awk -F')' '{print $1}');
-          echo "VERSION=v$VERSION";
-          echo "VERSION=v$VERSION" >> $GITHUB_ENV;
+          PROG_VERSION_CMAKE=$(grep "project(" "CMakeLists.txt" | awk -F' ' '{print $3}' | awk -F')' '{print $1}');
+          if [[ "$PROG_VERSION_CMAKE" != "" ]]; then
+            VERSION=v$PROG_VERSION_CMAKE;
+            echo "VERSION=$VERSION";
+            echo "VERSION=$VERSION" >> $GITHUB_ENV;
+          fi
+          echo "VERSION=$VERSION";
 
       - name: set env.SED_EXE and macOS install gnu-sed
         #if: ${{ startsWith(matrix.job.os, 'macos') }}
