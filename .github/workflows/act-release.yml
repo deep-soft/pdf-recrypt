@@ -120,10 +120,9 @@ jobs:
           pushd ${{ env.release_directory }}
              rm ${{ env.PROGRAM }}*.zip || true;
           popd
-
 # zip cleanup before - end
 
-# zip release begin
+# zip release - begin
       - name: Create Zip Archive Release
         continue-on-error: true
         uses: deep-soft/zip-release@v2
@@ -144,9 +143,9 @@ jobs:
           tag_name: ${{ env.TAG_NAME }}-${{ env.VERSION }}
           files: |
             ${{ env.ZIP_RELEASE_ARCHIVE }}
-# zip release end
+# zip release - end
 
-# zip release begin
+# zip release ALL - begin
       - name: Create Zip Archive Release - ALL
         if: ${{ inputs.CreateZipAll }}
         continue-on-error: true
@@ -169,15 +168,15 @@ jobs:
           tag_name: ${{ env.TAG_NAME }}-ALL
           files: |
             ${{ env.ZIP_RELEASE_ARCHIVE_ALL }}
-# zip release end
+# zip release ALL - end
 
 # zip cleanup for cache - begin
       - name: zip cleanup
         continue-on-error: true
         shell: bash
         run: |
-          rm ${{ env.ZIP_RELEASE_ARCHIVE }} || true;
-          rm ${{ env.ZIP_RELEASE_ARCHIVE_ALL }} || true;
+          if [[ "${{ env.ZIP_RELEASE_ARCHIVE     }}" != "" ]]; then rm ${{ env.ZIP_RELEASE_ARCHIVE     }} || true; fi
+          if [[ "${{ env.ZIP_RELEASE_ARCHIVE_ALL }}" != "" ]]; then rm ${{ env.ZIP_RELEASE_ARCHIVE_ALL }} || true; fi
           pushd ${{ env.release_directory }}
              rm ${{ env.PROGRAM }}*.zip || true;
           popd
