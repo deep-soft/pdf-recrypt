@@ -110,7 +110,19 @@ jobs:
           echo list $release_directory - begin
           ls -la $release_directory
           echo list $release_directory - end
- 
+
+ # zip cleanup before - begin
+      - name: zip cleanup
+        continue-on-error: true
+        shell: bash
+        run: |
+          rm ${{ env.PROGRAM }}*.zip || true;
+          pushd ${{ env.release_directory }}
+             rm ${{ env.PROGRAM }}*.zip || true;
+          popd
+
+# zip cleanup before - end
+
 # zip release begin
       - name: Create Zip Archive Release
         continue-on-error: true
@@ -158,6 +170,18 @@ jobs:
           files: |
             ${{ env.ZIP_RELEASE_ARCHIVE_ALL }}
 # zip release end
+
+# zip cleanup for cache - begin
+      - name: zip cleanup
+        continue-on-error: true
+        shell: bash
+        run: |
+          rm ${{ env.ZIP_RELEASE_ARCHIVE }} || true;
+          rm ${{ env.ZIP_RELEASE_ARCHIVE_ALL }} || true;
+          pushd ${{ env.release_directory }}
+             rm ${{ env.PROGRAM }}*.zip || true;
+          popd
+# zip cleanup for cache - end
 
       - name: Test
         if: ${{ inputs.RunTests }}
